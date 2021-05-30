@@ -8,6 +8,7 @@ from read_api_keys import consumer_key, consumer_secret, access_key, access_secr
 import time
 from pandas import DataFrame
 import pandas as pd
+import re
 
 def create_tweets():
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
@@ -53,7 +54,17 @@ def keep_tweets(keywords, user):
     out = pd.concat(keep)
 
     return out
-        
-        
+
+def clean_tweet(tweet_str):
+    """ Return a cleaned out tweet string """
+    tweet_str = re.sub(r"&amp;","and",tweet_str) # Replace & by and
+    tweet_str = re.sub(r"@\S*|http\S*|[^\w ,!:;’.()]*","",tweet_str)
+                #Remove @xxx   links  everything too special
+    return tweet_str
         
     # %%
+
+if __name__ == "__main__":
+    testStr = "@WholeMarsBlog Not sure who wrote this, but it’s accurate https://t.co/gRvWxOJZ56 🤣🤣 @Tesmanian_com 🇩🇪 🚘 ♥️ Geil! ♥️ 🚘 🇩🇪"
+    print("Before ", testStr)
+    print("After ",clean_tweet(testStr))
